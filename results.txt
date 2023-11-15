@@ -1,0 +1,40 @@
+Timestamp,Location,Sensor ID,Status/Alerts,Data Type,Value,Battery Level,Room Size,Installation Date
+2023-10-01 08:00:00,Kitchen,S1,Normal,Temperature,22.5Â°C,90%,15 sq. meters,2022-04-10
+2023-10-01 08:01:00,Living Room,S2,Alert,Binary,1,95%,20 sq. meters,2022-03-22
+2023-10-01 08:05:00,Bedroom,S3,Normal,Binary,0,85%,18 sq. meters,2022-01-15
+2023-10-01 08:10:00,Office,S4,Warning,Temperature,20.3Â°C,88%,25 sq. meters,2022-05-05
+2023-10-01 08:15:00,Kitchen,S5,Normal,Binary,1,92%,15 sq. meters,2022-03-20
+2023-10-01 08:20:00,Front Yard,S6,Alert,Security,Intrusion detected,95%,,2022-06-15
+2023-10-01 08:25:00,Bathroom,S7,Normal,Humidity,n/a,80%,12 sq. meters,2022-04-10
+2023-10-01 08:30:00,Kitchen,S8,Alert,Light Intensity,300 lux,75%,30 sq. meters,2022-02-01
+2023-10-01 08:35:00,Living Room,S9,Normal,Binary,0,90%,40 sq. meters,2022-01-20
+2023-10-01 08:40:00,Bedroom,S10,Warning,Temperature,24.0Â°C,88%,18 sq. meters,2022-03-10
+2023-10-01 08:45:00,Office,S11,Normal,Binary,1,70%,35 sq. meters,2022-05-20
+2023-10-01 08:50:00,Garage,S12,Alert,CO2 Level,450 ppm,60%,25 sq. meters,2022-04-01
+2023-10-01 08:55:00,Kitchen,S13,Normal,Light Intensity,200 lux,72%,15 sq. meters,2022-03-05
+2023-10-01 08:00:00,Kitchen,S1,Normal,Temperature,22.5Â°C,90%,15 sq. meters,2022-04-10
+2023-10-01 08:01:00,Living Room,S2,Alert,Binary,1,95%,20 sq. meters,2022-03-22
+2023-10-01 08:05:00,Bedroom,S3,Normal,Binary,0,85%,18 sq. meters,2022-01-15
+2023-10-01 09:10:00,Office,S4,Warning,Temperature,20.3Â°C,88%,25 sq. meters,2022-05-05
+2023-10-01 09:15:00,Kitchen,S5,Normal,Binary,1,92%,15 sq. meters,2022-03-20
+2023-10-01 09:20:00,Front Yard,S6,Alert,Security,Intrusion detected,95%,,2022-06-15
+2023-10-01 09:25:00,Bathroom,S7,Normal,Humidity,45%,80%,12 sq. meters,2022-04-10
+2023-10-01 09:30:00,Kitchen,S8,Alert,Light Intensity,300 lux,75%,30 sq. meters,2022-02-01
+2023-10-01 09:35:00,Living Room,S9,Normal,Binary,0,90%,40 sq. meters,2022-01-20
+2023-10-01 09:40:00,Bedroom,S10,Warning,Temperature,n/a,88%,18 sq. meters,2022-03-10
+2023-10-01 09:45:00,Office,S11,Normal,Binary,1,70%,35 sq. meters,2022-05-20
+2023-10-01 09:50:00,Garage,S12,Alert,CO2 Level,450 ppm,60%,25 sq. meters,2022-04-01
+2023-10-01 09:55:00,Kitchen,S13,Normal,Light Intensity,200 lux,72%,15 sq. meters,2022-03-05
+2023-10-01 09:00:00,Kitchen,S1,Normal,Temperature,22.5Â°C,90%,15 sq. meters,2022-04-10
+2023-10-01 09:01:00,Living Room,S2,Alert,Binary,1,95%,20 sq. meters,2022-03-22
+2023-10-01 09:05:00,Bedroom,S3,Normal,Binary,0,85%,18 sq. meters,2022-01-15
+2023-10-01 09:10:00,Office,S4,Warning,Temperature,20.3Â°C,88%,25 sq. meters,2022-05-05
+2023-10-01 09:15:00,Kitchen,S5,Normal,Binary,1,92%,15 sq. meters,2022-03-20
+2023-10-01 09:20:00,Front Yard,S6,Alert,Security,Intrusion detected,95%,,2022-06-15
+2023-10-01 09:25:00,Bathroom,S7,Normal,Humidity,45%,80%,12 sq. meters,2022-04-10
+2023-10-01 09:30:00,Kitchen,S8,Alert,Light Intensity,300 lux,75%,30 sq. meters,2022-02-01
+2023-10-01 09:35:00,Living Room,S9,Normal,Binary,0,90%,40 sq. meters,2022-01-20
+2023-10-01 09:40:00,Bedroom,S10,Warning,Temperature,24.0Â°C,88%,18 sq. meters,2022-03-10
+2023-10-01 09:45:00,Office,S11,Normal,Binary,1,70%,35 sq. meters,2022-05-20
+2023-10-01 09:50:00,Garage,S12,Alert,CO2 Level,450 ppm,60%,25 sq. meters,2022-04-01
+2023-10-01 09:55:00,Kitchen,S13,Normal,Light Intensity,200 lux,72%,15 sq. meters,2022-03-05

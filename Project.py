@@ -3,7 +3,7 @@
 
 import os # for temp files and for "UPDATE/DELETE reading functions"
 import re # Stripping but more advanced
-re.sub
+# re.sub
 ###################################
 # Sources
 # https://www.trainingint.com/how-to-find-duplicates-in-a-python-list.html
@@ -17,9 +17,6 @@ re.sub
 ###################################
 
 def main(): # This is the main interfere for everything else
-    print(list_Of_Locations)
-    print(list_Of_Sensors)
-    print(list_Of_DataTypes)
     print("\t\tSHM Application")
     print("\t\t   [1] Add a reading")
     print("\t\t   [2] Update a reading")
@@ -37,8 +34,9 @@ def main(): # This is the main interfere for everything else
         print("Value Error! You must enter numbers, letters are not accepted.")
         redirectMain()
     except KeyboardInterrupt as ve:
-        print("\n\tPlease do not use keyboard commands while program is running.")
+        print("\n\tPlease do not use keyboard commands while on input.")
         redirectMain()
+
 ###################################
 
 def redirect(x): #This is to redirect from main function into a sub function # main gets x (The number) and then moves on to the function that does the work
@@ -51,15 +49,15 @@ def redirect(x): #This is to redirect from main function into a sub function # m
     elif x == 4:
         all_Readings()
     elif x == 5:
-        return
+        statusAlerts_Readings()
     elif x == 6:
         dateType_Readings()
     elif x == 7:
         location_Readings()
     elif x == 8:
-        return
+        sensorID_Readings()
     elif x == 9:
-        return
+        battery_Readings()
     elif x == 0: # exits the function loop
         print("Thank you for using our program, have a good day.")
         exit()
@@ -75,11 +73,11 @@ def add_record(): # [1] Add a reading
     timestamp = input("Enter timestamp: ")
     location = caseinsentivity(input("Enter location: "))
     sensorID =input("Enter Sensor ID:")
-    if sensorID.upper not in list_Of_Sensors:
+    if str.upper(sensorID) not in list_Of_Sensors:
         print("Error: SensorID is not within the list of known sensors.")
         redirectMain()
     else:
-        sensorID = sensorID.upper
+        sensorID = str.upper(sensorID)
     statusAlert = input("Enter Sensor Status/Alert: ")
     dataType = input("Enter Data Type: ")
     readingValue = input("Enter reading value: ")
@@ -116,7 +114,7 @@ def update(): # [2] Update a reading
                     if statusAlert == 'Normal':
                         exists = exists + 1
                     else:
-                        print(f'Record is listed as {statusAlert} you are not able to update it')
+                        print(f'Record is listed as {statusAlert}, you are not able to update it')
                         continue
                 else:
                     continue
@@ -182,7 +180,7 @@ def delete(): # [3] Delete a reading
     print("Smart Campus Management Application - Delete a reading:\n=================================")
     print("Please Enter reading's timestamp and ID.")
     timestamp = input("Enter timestamp: ")
-    sensorID = input('Enter SensorID (case sensitive): ')
+    sensorID = input('Enter Sensor ID: ')
     if sensorID in list_Of_Sensors:
         addinfile = open('results.txt', 'r')
         lines = addinfile.readlines()
@@ -208,6 +206,7 @@ def delete(): # [3] Delete a reading
                             print('Deletion was successful.')
                         else:
                             print(f'Couldn\'t delete the reading because reading value is {treadingValue}. You can only delete reading values that are n/a.')
+                            addinfile.write(line + '\n')
                     else:
                         addinfile.write(line + '\n')
                 else:
@@ -219,14 +218,13 @@ def delete(): # [3] Delete a reading
     else:
         print('Couldn\'t find sensor ID.')
         redirectMain()
-        
-
     
 ###################################
 
 def all_Readings(): # [4] Display all readings      
     infile=open('results.txt','r') 
     lines=infile.readlines()
+    infile.close()
     for i in range(len(lines)):
         lines[i]=lines[i].strip()
     for line in lines:
@@ -249,7 +247,59 @@ def all_Readings(): # [4] Display all readings
 ###################################
 
 def statusAlerts_Readings(): # [5] Display all readings by Status/Alerts
-    return
+    statusAlerts_list = []
+    infile=open('results.txt','r') 
+    lines=infile.readlines()
+    infile.close()
+    
+    for i in range(len(lines)):
+        lines[i]=lines[i].strip()
+    for line in lines:
+        statusAlerts=line.split(",")[3]
+        if statusAlerts != 'Normal':
+            if statusAlerts != 'Status/Alerts':
+                if statusAlerts not in statusAlerts_list:
+                    statusAlerts_list.append(statusAlerts)
+    line = lines[0]
+    timestamp=line.split(",")[0]
+    location=line.split(",")[1]
+    sensorID=line.split(",")[2]
+    statusAlerts=line.split(",")[3]
+    dataType=line.split(",")[4]
+    value=line.split(",")[5]
+    batteryLevel=line.split(",")[6]
+    roomSize=line.split(",")[7]
+    installationDate=line.split(",")[8]
+    alertfile = open('alerts.txt', 'w')
+    if timestamp=='Timestamp':
+    
+                print(f"{timestamp:19}|{location:11}|{sensorID:8}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+                print("-------------------|-----------|---------|-------------|---------------|------------------|-------------|-------------|------------------ ")
+                alertfile.write(f'{timestamp},{location},{sensorID},{statusAlerts},{dataType},{value},{batteryLevel},{roomSize},{installationDate}' + '\n')
+
+    for status in statusAlerts_list:
+                infile=open('results.txt','r') 
+                lines=infile.readlines()
+                infile.close()
+                for i in range(len(lines)):
+                    lines[i]=lines[i].strip()
+                lines = sorted(lines)
+                for line in lines:
+                    timestamp=line.split(",")[0]
+                    location=line.split(",")[1]
+                    sensorID=line.split(",")[2]
+                    statusAlerts=line.split(",")[3]
+                    dataType=line.split(",")[4]
+                    value=line.split(",")[5]
+                    batteryLevel=line.split(",")[6]
+                    roomSize=line.split(",")[7]
+                    installationDate=line.split(",")[8]
+                    installationDate=installationDate.rstrip("\\")
+                    if status == statusAlerts:
+                        alertfile.write(f'{timestamp},{location},{sensorID},{statusAlerts},{dataType},{value},{batteryLevel},{roomSize},{installationDate}' + '\n')
+                        print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+    alertfile.close()
+    redirectMain()    
 
 ###################################
 
@@ -257,6 +307,7 @@ def dateType_Readings(): # [6] Display readings by a given data type"
     tdateType = dataType_caseinsentivity(input('Please enter data type to display: '))
     infile=open('results.txt','r') 
     lines=infile.readlines()
+    infile.close()
     for i in range(len(lines)):
         lines[i]=lines[i].strip()
     for line in lines:
@@ -277,13 +328,13 @@ def dateType_Readings(): # [6] Display readings by a given data type"
                 print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
     redirectMain()
 
-
 ###################################
 
 def location_Readings(): # [7] Display readings in a given location
     tlocation = caseinsentivity(input('Please enter location to display: '))
     infile=open('results.txt','r') 
     lines=infile.readlines()
+    infile.close()
     for i in range(len(lines)):
         lines[i]=lines[i].strip()
     for line in lines:
@@ -302,14 +353,76 @@ def location_Readings(): # [7] Display readings in a given location
                 print("-------------------|-----------|---------|-------------|---------------|------------------|-------------|-------------|------------------ ")
             elif location == tlocation:
                 print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
-
+    redirectMain()
 
 ###################################
+
+def sensorID_Readings(): # [8] Display readings by a given Sensor ID
+    tsensorID = input('Please enter Sensor ID to display: ')
+    tsensorID = str.capitalize(tsensorID)
+    if tsensorID not in list_Of_Sensors:
+        print(f'{tsensorID} was not found. Please enter a valid sensor ID')
+        redirectMain()
+    else:
+        infile=open('results.txt','r') 
+        lines=infile.readlines()
+        infile.close()
+        for i in range(len(lines)):
+            lines[i]=lines[i].strip()
+        for line in lines:
+                timestamp=line.split(",")[0]
+                location=line.split(",")[1]
+                sensorID=line.split(",")[2]
+                statusAlerts=line.split(",")[3]
+                dataType=line.split(",")[4]
+                value=line.split(",")[5]
+                batteryLevel=line.split(",")[6]
+                roomSize=line.split(",")[7]
+                installationDate=line.split(",")[8]
+                installationDate=installationDate.rstrip("\\")
+                if timestamp=='Timestamp':
+                    print(f"{timestamp:19}|{location:11}|{sensorID:8}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+                    print("-------------------|-----------|---------|-------------|---------------|------------------|-------------|-------------|------------------ ")
+                elif sensorID == tsensorID:
+                    print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+    redirectMain()
+
+###################################
+
+def battery_Readings(): # [9] Display details about all sensors with low level Battery
+        tbatterylevel = 50
+        
+        
+        infile=open('results.txt','r') 
+        lines=infile.readlines()
+        infile.close()
+        for i in range(len(lines)):
+            lines[i]=lines[i].strip()
+        for line in lines:
+                timestamp=line.split(",")[0]
+                location=line.split(",")[1]
+                sensorID=line.split(",")[2]
+                statusAlerts=line.split(",")[3]
+                dataType=line.split(",")[4]
+                value=line.split(",")[5]
+                batteryLevel=line.split(",")[6]
+                roomSize=line.split(",")[7]
+                installationDate=line.split(",")[8]
+                installationDate=installationDate.rstrip("\\")
+                if timestamp=='Timestamp':
+                    print(f"{timestamp:19}|{location:11}|{sensorID:8}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+                    print("-------------------|-----------|---------|-------------|---------------|------------------|-------------|-------------|------------------ ")
+                elif tbatterylevel >= int(re.sub('\D', '', batteryLevel)):
+                    print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
+        redirectMain()
+
+###################################
+
 
 def caseinsentivity(location): # Checks for location while being caseinsentive
     location = str.casefold(location)
     if location not in list_Of_Locations: #Checks validity
-        print(f"{location} is not accepted. Please only use valid location")
+        print(f"{location} is not accepted. Please only use valid location.")
         print('Valid locations are (' + ','.join(list_Of_Locations) +')' )
         redirectMain()
     location = str.capitalize(location)
@@ -330,13 +443,47 @@ def dataType_caseinsentivity(dataType):
         dataType == 'Light Intensity'
     return dataType
         
-
-   
 ###################################
       
 def redirectMain(): # Instead of repeating redirection to main, make it one function.
     print("Returning to main. . .")
     main()
+
+###################################
+
+def get_AvgSeries_Data(reading_list): # NOT DONE
+    AvgSeries_Data = []
+    list_datatype = []
+    for item in list_Of_DataTypes: 
+        if item != 'security':
+            if item != 'binary':
+                list_datatype.append(item)
+
+    for i in range(len(reading_list)):
+        reading_list[i]=reading_list[i].strip()
+    
+    
+    for data in list_datatype: # runs four times
+        averagedata = []
+        for item in reading_list:
+            dataType=item.split(",")[4]
+            dataType = str.casefold(dataType)
+            dataValue=item.split(",")[5]
+            if dataType == data:
+                if dataValue != 'n/a' or 'N/A':
+                    dataValue = re.sub('\D', '', dataValue)
+                    print(dataValue)
+                    if dataValue not in averagedata:
+                        averagedata.append(dataValue)
+                else:
+                    averagedata.append(0)
+        # average = (sum(averagedata)/len(averagedata))
+        # AvgSeries_Data.append(f'{data},{average}')
+
+
+
+
+        
 
 
 ###################################
@@ -363,7 +510,6 @@ def lister():
                     list_Of_Locations.append(Location)
             if dataType != "Data Type":
                 dataType = str.casefold(dataType)
-                
                 if dataType not in list_Of_DataTypes:
                     list_Of_DataTypes.append(dataType)
                     
@@ -372,13 +518,22 @@ list_Of_Sensors = []
 list_Of_Locations = []
 list_Of_DataTypes = []
 
+read = open('results.txt', 'r')
+lines = read.readlines()
+read.close()
+for item in range(len(lines)):
+    lines[item]=lines[item].rstrip('\n')
+lister()
+get_AvgSeries_Data(lines)
+
+
 if os.path.exists('results.txt') == True: # Checks if results text file exists
     lister()
     main()
 elif os.path.exists('temp.txt') == True: # Check if the temp file exists
     print('File recovery is running.')
     print('Results file doesn\'t exist however temp results file exists.')
-    check = input('Do you wish to use it?')
+    check = input('Do you wish to use it? Type Y if so or everything else if you do not.')
     if str.upper(check) == 'Y':
         os.rename('temp.txt', 'results.txt') # Makes the temp file the new main file
         print('File has been created.')
@@ -393,7 +548,7 @@ else: # If both files do not exists it creates a new file with no readings if th
     if str.upper(check) == 'Y':
         createfile = open('results.txt', 'w') 
         createfile.write('Timestamp,Location,Sensor ID,Status/Alerts,Data Type,Value,Battery Level,Room Size,Installation Date')
-        createfile.close
+        createfile.close()
         print('File has been created.')
     else:
         redirect(0)

@@ -27,6 +27,7 @@ def main(): # This is the main interfere for everything else
     print("\t\t   [7] Display readings in a given location")
     print("\t\t   [8] Display readings by a given Sensor ID")
     print("\t\t   [9] Display details about all sensors with low level Battery")
+    print("\t\t   [10] Display average of different data types")
     print("\t\t   [0] Exit")
     try: # This is to catch Value Errors from invalid input statements, if caught, restarts.
         redirect(int(input("\tPlease enter your own choice : ")))
@@ -58,6 +59,8 @@ def redirect(x): #This is to redirect from main function into a sub function # m
         sensorID_Readings()
     elif x == 9:
         battery_Readings()
+    elif x == 10:
+        display_Average()
     elif x == 0: # exits the function loop
         print("Thank you for using our program, have a good day.")
         exit()
@@ -243,7 +246,7 @@ def all_Readings(): # [4] Display all readings
             print("-------------------|-----------|---------|-------------|---------------|------------------|-------------|-------------|------------------ ")
         else:
             print(f"{timestamp:19}|{location:11}|{sensorID:9}|{statusAlerts:13}|{dataType:15}|{value:18}|{batteryLevel:13}|{roomSize:13}|{installationDate:8}")
-
+    redirectMain()
 ###################################
 
 def statusAlerts_Readings(): # [5] Display all readings by Status/Alerts
@@ -418,6 +421,21 @@ def battery_Readings(): # [9] Display details about all sensors with low level B
 
 ###################################
 
+def display_Average(): # [10] Displays the average of data types
+    read = open('results.txt', 'r')
+    lines = read.readlines()
+    read.close()
+    for item in range(len(lines)):
+        lines[item]=lines[item].rstrip('\n')
+    AvgSeries = get_AvgSeries_Data(lines)
+    print('Data and Average')
+    for items in AvgSeries:
+        Data =items.split(':')[0]
+        Value = items.split(':')[1]
+        print(Data + ': ' +Value)
+    redirectMain()
+        
+###################################
 
 def caseinsentivity(location): # Checks for location while being caseinsentive
     location = str.casefold(location)
@@ -458,11 +476,8 @@ def get_AvgSeries_Data(reading_list): # NOT DONE
         if item != 'security':
             if item != 'binary':
                 list_datatype.append(item)
-
     for i in range(len(reading_list)):
         reading_list[i]=reading_list[i].strip()
-    
-    
     for data in list_datatype: # runs four times
         averagedata = []
         for item in reading_list:
@@ -470,21 +485,32 @@ def get_AvgSeries_Data(reading_list): # NOT DONE
             dataType = str.casefold(dataType)
             dataValue=item.split(",")[5]
             if dataType == data:
-                if dataValue != 'n/a' or 'N/A':
-                    dataValue = re.sub('\D', '', dataValue)
-                    print(dataValue)
+                if dataValue != 'n/a':
+                    dataValue = float(re.sub('\D', '', dataValue))
                     if dataValue not in averagedata:
                         averagedata.append(dataValue)
                 else:
-                    averagedata.append(0)
-        # average = (sum(averagedata)/len(averagedata))
-        # AvgSeries_Data.append(f'{data},{average}')
+                    if 0 not in averagedata:
+                        averagedata.append(0)
+        average = (sum(averagedata)/len(averagedata))
+        if data == 'temperature':
+            data = str.capitalize(data)
+            average = f'{average}°C'
+        elif data == 'humidity':
+            data = str.capitalize(data)
+            average = f'{average}%'
+        elif data == 'light intensity':
+            data = str.title(data)
+            average = f'{average} lux'
+        elif data == "co2 level":
+            data = 'CO2 Level'
+            average = f'{average} ppm'
+            
 
-
-
-
-        
-
+            
+            
+        AvgSeries_Data.append(f'{data}:{average}')
+    return(AvgSeries_Data)
 
 ###################################
 
@@ -518,13 +544,7 @@ list_Of_Sensors = []
 list_Of_Locations = []
 list_Of_DataTypes = []
 
-read = open('results.txt', 'r')
-lines = read.readlines()
-read.close()
-for item in range(len(lines)):
-    lines[item]=lines[item].rstrip('\n')
-lister()
-get_AvgSeries_Data(lines)
+
 
 
 if os.path.exists('results.txt') == True: # Checks if results text file exists

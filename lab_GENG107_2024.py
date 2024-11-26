@@ -1,4 +1,4 @@
-import turtle, math, random, os
+import turtle, math, random, os, datetime
 
 def main(): # This is the main interfere for everything else - A
     print("\n\t\tTurtle Shapes Application")
@@ -24,7 +24,7 @@ def main(): # This is the main interfere for everything else - A
 
 def redirect(x): #This is to redirect from main function into a sub function # main gets x (The number) and then moves on to the function that does the work
     if x == 1: # redirects to 'add a new reading' function
-        shape_add() # not yet (input validation if want)
+        shape_add() # done
     elif x == 2:
         shape_update() # done
     elif x == 3:
@@ -53,7 +53,35 @@ def redirectMain(): # Instead of repeating redirection to main, make it one func
 ###################################
 
 def shape_add():
-    pass
+    print('Please enter the information for the new shape.\n')
+    add_reading_Type = input(f'Enter value for Type: ')
+    add_reading_FillColor = input(f'Enter value for Fill Colour: ')
+    add_reading_BorderColor = input(f'Enter value for Border Colour: ')
+    add_reading_BorderThickness = input(f'Enter value for Border Thickness: ')
+    add_reading_Length = input(f'Enter value for Length: ')
+    add_reading_Width = input(f'Enter value for Width: ')
+    add_reading_Size = input(f'Enter value for Size: ')
+    add_reading_Position = input(f'Enter value for Position: ')
+    add_reading_Description = input(f'Enter value for Description: ')
+
+    Shapecodes_list = []
+    with open('shapes.txt', 'r') as infile:
+            readings = infile.readlines()
+    for i in range(len(readings)):
+            readings[i]=readings[i].strip()
+    for reading in readings: 
+            reading_Type,reading_FillColor,reading_BorderColor,reading_BorderThickness,reading_Length,reading_Width,reading_Size,reading_Position,reading_Description,reading_ShapeCode,reading_CreationTime= reading.split('|')
+            if reading_ShapeCode != 'ShapeCode':
+                Shapecodes_list.append(int(reading_ShapeCode))
+    add_reading_ShapeCode = (max(Shapecodes_list) + 1)
+
+    time = datetime.datetime.now()
+    add_reading_CreationTime = time.strftime('%Y-%m-%d %H:%M')
+
+    with open('shapes.txt', 'a') as outfile:
+        outfile.write(f'\n{add_reading_Type}|{add_reading_FillColor}|{add_reading_BorderColor}|{add_reading_BorderThickness}|{add_reading_Length}|{add_reading_Width}|{add_reading_Size}|{add_reading_Position}|{add_reading_Description}|{add_reading_ShapeCode}|{add_reading_CreationTime}')
+    print('Value added.\n')
+    redirectMain()
 
 ###################################
 
@@ -141,6 +169,8 @@ def list_all():
         redirectMain() # loops back to main
     else:
         redirect(0)
+
+###################################
 
 def list_category():
     with open('shapes.txt', 'r') as infile:
@@ -254,7 +284,82 @@ def draw_shape():
 ###################################
 
 def statistics():
-    pass
+        print('''Please specify what you want to analyze
+[1] Type [2] Color [3] Size [4] All [0] To cancel''')
+        ui_requirements = input('Please enter your option: ').split('123')
+        list_reading_Type = [] # initializiation for all local values/list/dict
+        list_reading_Colours = []
+        list_reading_size = []
+        list_reading_totalcount = 0
+        list_color_checked = []
+        list_type_checked = []
+        dictionary_color = dict()
+        dictionary_type = dict()
+
+        if '0' != ui_requirements: # makes sure user didnt want to quit
+                if '1' and '2' and '3' and '4' not in ui_requirements: # input validation
+                        print('You need to input a valid option.')
+                elif '1' in ui_requirements: # SAME AS 4
+                        pass
+                elif '2' in ui_requirements: # SAME AS 4
+                        pass
+                elif '3' in ui_requirements: # SAME AS 4
+                        pass
+                elif '4' in ui_requirements: ###### START CODE FOR NUMBER 4. ALL OTHERS ARE SIMILAR TO 4 BUT HAVE REQUIREMENTS
+                        with open('shapes.txt', 'r') as infile: # just gets readings
+                                readings = infile.readlines()
+                        for i in range(len(readings)):      # prepares readings
+                                readings[i]=readings[i].strip()
+                        for reading in readings:  # General Code for specific values in reading
+                                reading_Type,reading_FillColor,reading_BorderColor,reading_BorderThickness,reading_Length,reading_Width,reading_Size,reading_Position,reading_Description,reading_ShapeCode,reading_CreationTime= reading.split('|')
+                                if reading_Type != 'Type': # Condition
+                                        list_reading_Type.append(reading_Type) # Compiles all types into list
+                                        list_reading_Colours.append(reading_FillColor) # Complies all colors into list
+                                        list_reading_size.append(int(reading_Size)) # complies all sizes into a list after turning them into int
+                                list_reading_totalcount += 1 # counts
+                        list_size_avg = sum(list_reading_size)/ len(list_reading_size) # Gets average size
+                        list_size_min = min(list_reading_size) # Gets smallest size
+                        list_size_max = max(list_reading_size) # Gets largest size
+                        for item in list_reading_Colours: # uses color list to turn into a dictionary
+                                if item not in list_color_checked:
+                                        list_color_checked.append(item)
+                                        dictionary_color[item]=1
+                                elif item in list_color_checked:
+                                        dictionary_color[item] = dictionary_color[item] + 1
+                        for item in list_reading_Type: # uses type list to turn into a dictionary
+                                if item not in list_type_checked:
+                                        list_type_checked.append(item)
+                                        dictionary_type[item]=1
+                                elif item in list_type_checked:
+                                        dictionary_type[item] = dictionary_type[item] + 1
+                        dictionary_color_loader = ['Distribution of Colors:'] # uses dictionary and turns it into a string
+                        for colours in dictionary_color:
+                                dictionary_color_loader.append(f'-{colours}: {dictionary_color.get(colours)}')
+                        loaded_color_list = ('\n'.join(dictionary_color_loader)) # resulting useable string from dictionary
+                        dictionary_type_loader = ['Distribution of Types:'] # similar to colors
+                        for type in dictionary_type:
+                                dictionary_type_loader.append(f'-{type}: {dictionary_type.get(type)}')
+                        
+                        loaded_type_list = ('\n'.join(dictionary_type_loader))
+                        # complies all data into a value
+                        anyalisis_all = f'''Statistics for all Shapes
+Total Count: {list_reading_totalcount}
+
+{loaded_color_list}
+
+{loaded_type_list}
+
+Average Size: {list_size_avg}
+Smallest Size: {list_size_min}
+Largest Size: {list_size_max}'''
+                        print(anyalisis_all) # prints 'anaylsis
+                        ui_anaylsis = input('\nType Y for the statistics to be written in a text file: ') # gets user confirmation
+                        
+                        if ui_anaylsis == 'Y' or ui_anaylsis == 'y': # turns anyalsis into a text file
+                                with open('analysis.txt', 'w') as infile:
+                                        infile.write(anyalisis_all)
+        redirectMain()
+
 
 ###################################
 

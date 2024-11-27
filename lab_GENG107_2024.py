@@ -123,6 +123,7 @@ Type[1] FillColor[2] BorderColor[3] BorderThickness[4] Length[5] Width[6] Size[7
                     reading_CreationTime = input(f'Enter new value for Creation Time. Current value is {reading_CreationTime}: ')
 
                 outfile.write(f'{reading_Type}|{reading_FillColor}|{reading_BorderColor}|{reading_BorderThickness}|{reading_Length}|{reading_Width}|{reading_Size}|{reading_Position}|{reading_Description}|{reading_ShapeCode}|{reading_CreationTime}')
+                print('Value has been updated.')
             else:
                 outfile.write(reading)
     os.remove('shapes.txt')
@@ -140,11 +141,13 @@ def shape_delete():
         for reading in readings:
             delete_code = reading.split('|')[9]
             if delete_code == ui_DeleteCode:
+                print('Value deleted.')
                 pass
             else:
                 outfile.write(reading)
     os.remove('shapes.txt')
     os.rename('shapes_temp.txt', 'shapes.txt')
+    
     
     redirectMain() # loops back to main 
 
@@ -164,11 +167,9 @@ def list_all():
 
             print(f"{'-'*9}|{'-'*9}|{'-'*11}|{'-'*15}|{'-'*6}|{'-'*5}|{'-'*4}|{'-'*9}|{'-'*11}|{'-'*9}|{'-'*16}")
     
-    ui_confirm = input('\nType (Y) to go back to main, anything else to quit : ')
-    if ui_confirm == 'y' or ui_confirm == 'Y':
-        redirectMain() # loops back to main
-    else:
-        redirect(0)
+
+    redirectMain() # loops back to main
+
 
 ###################################
 
@@ -294,17 +295,106 @@ def statistics():
         list_color_checked = []
         list_type_checked = []
         dictionary_color = dict()
-        dictionary_type = dict()
-
+        dictionary_type = dict() 
         if '0' != ui_requirements: # makes sure user didnt want to quit
-                if '1' and '2' and '3' and '4' not in ui_requirements: # input validation
-                        print('You need to input a valid option.')
-                elif '1' in ui_requirements: # SAME AS 4
-                        pass
+##################################################################################################################################################################
+                if '1' in ui_requirements: # SAME AS 4
+                    with open('shapes.txt', 'r') as infile: # just gets readings
+                        list_of_valid_shapes = ['circle','square','triangle','rectangle','oval']
+                        while True:
+                            ui_condition = input('Which type of shape would you like to anaylize: ')
+                            if ui_condition in list_of_valid_shapes:
+                                break
+                            else:
+                                print(f'''{ui_condition} is not a valid option.
+Valid options are: {', '.join(list_of_valid_shapes)}''')
+                        readings = infile.readlines()
+                        for i in range(len(readings)):      # prepares readings
+                                readings[i]=readings[i].strip()
+                        for reading in readings:  # General Code for specific values in reading
+                                reading_Type,reading_FillColor,reading_BorderColor,reading_BorderThickness,reading_Length,reading_Width,reading_Size,reading_Position,reading_Description,reading_ShapeCode,reading_CreationTime= reading.split('|')
+                                if reading_Type == ui_condition: # Condition
+                                        list_reading_Type.append(reading_Type) # Compiles all types into list
+                                        list_reading_Colours.append(reading_FillColor) # Complies all colors into list
+                                        list_reading_size.append(int(reading_Size)) # complies all sizes into a list after turning them into int
+                                        list_reading_totalcount += 1 # counts
+                        list_size_avg = sum(list_reading_size)/ len(list_reading_size) # Gets average size
+                        list_size_min = min(list_reading_size) # Gets smallest size
+                        list_size_max = max(list_reading_size) # Gets largest size
+                        for item in list_reading_Colours: # uses color list to turn into a dictionary
+                                if item not in list_color_checked:
+                                        list_color_checked.append(item)
+                                        dictionary_color[item]=1
+                                elif item in list_color_checked:
+                                        dictionary_color[item] = dictionary_color[item] + 1
+                        dictionary_color_loader = ['Distribution of Colors:'] # uses dictionary and turns it into a string
+                        for colours in dictionary_color:
+                                dictionary_color_loader.append(f'-{colours}: {dictionary_color.get(colours)}')
+                        loaded_color_list = ('\n'.join(dictionary_color_loader)) # resulting useable string from dictionary
+
+                                                # complies all data into a value
+                        anyalisis_all = f'''Statistics for Shapes of Type: {ui_condition}
+Total Count: {list_reading_totalcount}
+
+{loaded_color_list}
+
+Average Size: {list_size_avg}
+Smallest Size: {list_size_min}
+Largest Size: {list_size_max}'''
+                        print(anyalisis_all) # prints 'anaylsis
+                        ui_anaylsis = input('\nType Y for the statistics to be written in a text file: ') # gets user confirmation
+                        
+                        if ui_anaylsis == 'Y' or ui_anaylsis == 'y': # turns anyalsis into a text file
+                                with open('analysis.txt', 'w') as infile:
+                                        infile.write(anyalisis_all)
+                                print('Anaylsis.txt file has been created.')
+##################################################################################################################################################################
                 elif '2' in ui_requirements: # SAME AS 4
-                        pass
+                        ui_requirement = input('Which color shape would you like to anaylize: ')
+                        readings = infile.readlines()
+                        for i in range(len(readings)):      # prepares readings
+                                readings[i]=readings[i].strip()
+                        for reading in readings:  # General Code for specific values in reading
+                                reading_Type,reading_FillColor,reading_BorderColor,reading_BorderThickness,reading_Length,reading_Width,reading_Size,reading_Position,reading_Description,reading_ShapeCode,reading_CreationTime= reading.split('|')
+                                if reading_FillColor == ui_requirement: # Condition
+                                        list_reading_Type.append(reading_Type) # Compiles all types into list
+                                        list_reading_size.append(int(reading_Size)) # complies all sizes into a list after turning them into int
+                                        list_reading_totalcount += 1 # counts
+                                        
+                        list_size_avg = sum(list_reading_size)/ len(list_reading_size) # Gets average size
+                        list_size_min = min(list_reading_size) # Gets smallest size
+                        list_size_max = max(list_reading_size) # Gets largest size
+                        for item in list_reading_Type: # uses type list to turn into a dictionary
+                                if item not in list_type_checked:
+                                        list_type_checked.append(item)
+                                        dictionary_type[item]=1
+                                elif item in list_type_checked:
+                                        dictionary_type[item] = dictionary_type[item] + 1
+                        dictionary_type_loader = ['Distribution of Types:'] # similar to colors
+                        for type in dictionary_type:
+                                dictionary_type_loader.append(f'-{type}: {dictionary_type.get(type)}')
+                        
+                        loaded_type_list = ('\n'.join(dictionary_type_loader))
+                        # complies all data into a value
+                        anyalisis_all = f'''Statistics for Shapes of Color: {ui_requirement}
+Total Count: {list_reading_totalcount}
+
+{loaded_type_list}
+
+Average Size: {list_size_avg}
+Smallest Size: {list_size_min}
+Largest Size: {list_size_max}'''
+                        print(anyalisis_all) # prints 'anaylsis
+                        ui_anaylsis = input('\nType Y for the statistics to be written in a text file: ') # gets user confirmation
+                        
+                        if ui_anaylsis == 'Y' or ui_anaylsis == 'y': # turns anyalsis into a text file
+                                with open('analysis.txt', 'w') as infile:
+                                        infile.write(anyalisis_all)
+                                print('Anaylsis.txt file has been created.')
+##################################################################################################################################################################
                 elif '3' in ui_requirements: # SAME AS 4
                         pass
+##################################################################################################################################################################
                 elif '4' in ui_requirements: ###### START CODE FOR NUMBER 4. ALL OTHERS ARE SIMILAR TO 4 BUT HAVE REQUIREMENTS
                         with open('shapes.txt', 'r') as infile: # just gets readings
                                 readings = infile.readlines()
@@ -358,6 +448,8 @@ Largest Size: {list_size_max}'''
                         if ui_anaylsis == 'Y' or ui_anaylsis == 'y': # turns anyalsis into a text file
                                 with open('analysis.txt', 'w') as infile:
                                         infile.write(anyalisis_all)
+                                print('Anaylsis.txt file has been created.')
+##################################################################################################################################################################
         redirectMain()
 
 

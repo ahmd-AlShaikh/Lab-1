@@ -286,7 +286,7 @@ def draw_shape():
 
 def statistics():
         print('''Please specify what you want to analyze
-[1] Type [2] Color [3] Size [4] All [0] To cancel''')
+[1] Type [2] Color [3] All [0] To cancel''')
         ui_requirements = input('Please enter your option: ').split('123')
         list_reading_Type = [] # initializiation for all local values/list/dict
         list_reading_Colours = []
@@ -298,7 +298,7 @@ def statistics():
         dictionary_type = dict() 
         if '0' != ui_requirements: # makes sure user didnt want to quit
 ##################################################################################################################################################################
-                if '1' in ui_requirements: # SAME AS 4
+                if '1' in ui_requirements: # SAME AS 3
                     with open('shapes.txt', 'r') as infile: # just gets readings
                         list_of_valid_shapes = ['circle','square','triangle','rectangle','oval']
                         while True:
@@ -349,7 +349,7 @@ Largest Size: {list_size_max}'''
                                         infile.write(anyalisis_all)
                                 print('Anaylsis.txt file has been created.')
 ##################################################################################################################################################################
-                elif '2' in ui_requirements: # SAME AS 4
+                elif '2' in ui_requirements: # SAME AS 3
                         ui_requirement = input('Which color shape would you like to anaylize: ')
                         readings = infile.readlines()
                         for i in range(len(readings)):      # prepares readings
@@ -392,10 +392,7 @@ Largest Size: {list_size_max}'''
                                         infile.write(anyalisis_all)
                                 print('Anaylsis.txt file has been created.')
 ##################################################################################################################################################################
-                elif '3' in ui_requirements: # SAME AS 4
-                        pass
-##################################################################################################################################################################
-                elif '4' in ui_requirements: ###### START CODE FOR NUMBER 4. ALL OTHERS ARE SIMILAR TO 4 BUT HAVE REQUIREMENTS
+                elif '3' in ui_requirements: # SAME AS 3
                         with open('shapes.txt', 'r') as infile: # just gets readings
                                 readings = infile.readlines()
                         for i in range(len(readings)):      # prepares readings
@@ -406,7 +403,7 @@ Largest Size: {list_size_max}'''
                                         list_reading_Type.append(reading_Type) # Compiles all types into list
                                         list_reading_Colours.append(reading_FillColor) # Complies all colors into list
                                         list_reading_size.append(int(reading_Size)) # complies all sizes into a list after turning them into int
-                                list_reading_totalcount += 1 # counts
+                                        list_reading_totalcount += 1 # counts
                         list_size_avg = sum(list_reading_size)/ len(list_reading_size) # Gets average size
                         list_size_min = min(list_reading_size) # Gets smallest size
                         list_size_max = max(list_reading_size) # Gets largest size
